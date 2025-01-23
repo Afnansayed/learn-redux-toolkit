@@ -5,9 +5,10 @@ import { FaEye, FaEyeSlash, FaGoogle, FaTwitter } from "react-icons/fa6";
 
 
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addUser } from "@/redux/slice/userSlice";
-import { RootState } from "@/redux/store";
+import { userRegister } from "@/components/authentication/userRegister";
+// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+// import { addUser } from "@/redux/slice/userSlice";
+// import { RootState } from "@/redux/store";
 
 type Inputs = {
   name: string,
@@ -16,10 +17,10 @@ type Inputs = {
   confirmPassword: string
 };
 const SignupPage = () => {
-  const users = useAppSelector((state:RootState) => state.user.users);
-  console.log('Redux users', users)
+  // const users = useAppSelector((state:RootState) => state.user.users);
+  // console.log('Redux users', users)
     const [formData,setFormData] = useState({name:"",email:"",password:"",confirmPassword:""})
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = useState("")
     const [inputValueTwo, setInputValueTwo] = useState("")
     const [inputValueThree, setInputValueThree] = useState("")
@@ -27,9 +28,17 @@ const SignupPage = () => {
      const [showPassword, setShowPassword] = useState(false);
      const [showPasswordTwo, setShowPasswordTwo] = useState(false);
      const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-     const onSubmit: SubmitHandler<Inputs> = data => {
+     const onSubmit: SubmitHandler<Inputs> = async (data) => {
             setFormData(data)
-            dispatch(addUser({ id: 1, name: "razin", email: 'examle@gmail.com' ,password: '43875' , confirmPassword:'654645' }))
+            // dispatch(addUser({ id: 1, name: "razin", email: 'examle@gmail.com' ,password: '43875' , confirmPassword:'654645' }))
+            try {
+                const { name, email, password } = data;
+                const response = await userRegister({ fullName: name, email, password });
+                console.log('Response form Register',response);
+            }catch(error){
+              console.log(error)
+            }
+             
      }
 
      const password = watch("password")
